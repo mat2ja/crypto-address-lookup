@@ -1,21 +1,17 @@
-let appWrapper = document.querySelector('.app');
-let addressEl = document.querySelector('.address');
-let balanceEl = document.querySelector('.balance');
-let searchBtn = document.querySelector('.search');
-let coinNameEl = document.querySelector('.coin-name');
+// DOM Elements
+const appWrapper = document.querySelector('.app');
+const cardEl = document.querySelector('.card');
+const addressEl = document.querySelector('.address');
+const balanceEl = document.querySelector('.balance');
+const searchBtn = document.querySelector('.search');
+const coinNameEl = document.querySelector('.coin-name');
 
-// address = '0x6D91F46966F703C61090E829fBe0870d3551CAA9'; //ETH
-// address = '3CsGhWqT4E17ucePh2U2C3Vgd7pNhw641t'; // BTC
-// address = 'XfcLDYdv97tc8YYbQqmR1gxBdLq4xfPNdy'; // DASH
-// address = 't1MyKSea26LaxeotrDMiZWta8kRJASGNr6t'; // ZCASH
-// address = 'DSs7SN1wkHNyYfFeJ3t41BTMkf2Z4fgmRp'; // DOGE
-// address = 'LaJfmTU7ZYiCUjcNEbnn6DzkwNtpARkonA'; // LTC
-// address = 'nano_1dptcs1wo89e5q8udktm36gj4ue34t7cqfxdtf5mxao71bufnogpus1kdtes'; // NANO
-// address = 'qr0zq8fl88fzv5d4620y8ucvasxkk4j6gg0d2rwjst'; // BCH
-// address = 'rQ3fNyLjbvcDaPNS4EAJY8aT9zR3uGk17c'; // XRP
-// address = 'DdzFFzCqrhsk3Bqvun2x2CZh3E7xRrdmH9552oWkBQ6JUNtsSgTFzRhZKN7FjdUFwdZa4B5pm4xVnKVGov3Vox53iigr7upJoBcNBLXf'; // ADA
+const coinLabelEL = document.querySelector('.coin-label');
+const supportedCoins = document.querySelector('.supported-coins');
+const coins = supportedCoins.querySelectorAll('img');
 
-let coinsInfo = {
+// Cryptocurrency objects
+const coinsInfo = {
     btc: {
         name: 'btc',
         fullName: 'Bitcoin',
@@ -53,7 +49,7 @@ let coinsInfo = {
         fullName: 'Doge',
         symbol: 'doge',
         divisor: 1,
-        decimals: 8,
+        decimals: 4,
         website: 'https://dogecoin.com'
     },
     ltc: {
@@ -61,7 +57,7 @@ let coinsInfo = {
         fullName: 'Litecoin',
         symbol: 'ltc',
         divisor: 1,
-        decimals: 5,
+        decimals: 4,
         website: 'https://litecoin.com'
     },
     bch: {
@@ -69,7 +65,7 @@ let coinsInfo = {
         fullName: 'Bitcoin Cash',
         symbol: 'bch',
         divisor: 1e8,
-        decimals: 5,
+        decimals: 4,
         website: 'https://www.bitcoincash.org'
     },
     nano: {
@@ -77,7 +73,7 @@ let coinsInfo = {
         fullName: 'Nano',
         symbol: 'nano',
         divisor: 1e30,
-        decimals: 5,
+        decimals: 4,
         website: 'https://nano.org'
     },
     xrp: {
@@ -90,10 +86,28 @@ let coinsInfo = {
     }
 };
 
+// Add coin name label on hover
+for (let coin of coins) {
+    coin.addEventListener('mouseover', () => {
+        document.querySelector('.coin-label').classList.remove('hide')
+        document.querySelector('.coin-label').innerText = coin.dataset.name;
+    })
+}
+
+// Remove coin name label on hover-end
+supportedCoins.addEventListener('mouseleave', () => {
+    document.querySelector('.coin-label').classList.add('hide');
+});
+
+// what to do on address submit
 appWrapper.addEventListener('submit', (e) => {
+    // prevent sennding to server and reloading the page
     e.preventDefault();
+
+    // get address from input
     let address = addressEl.value;
 
+    // re
     let coin = recognizeCoin(address);
     if (!coin) {
         showWarning('😕', 'No address found');
@@ -103,6 +117,7 @@ appWrapper.addEventListener('submit', (e) => {
     fetchApi(coin, address);
 })
 
+// listens for change on input, checks if it is empty to show some placeholder
 addressEl.addEventListener('input', (e) => {
     // if value is empty
     if (!addressEl.value) {
@@ -116,8 +131,9 @@ addressEl.addEventListener('input', (e) => {
     }
 })
 
+// recognizes coin address and returns key of recognized coin object
 function recognizeCoin(address) {
-    let { btc, eth, dash, zec, doge, ltc, bch, nano, xrp } = coinsInfo;
+    const { btc, eth, dash, zec, doge, ltc, bch, nano, xrp } = coinsInfo;
     let coin = '';
 
     if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
@@ -177,15 +193,14 @@ function fetchApi(coin, address) {
         .then(data => {
             console.log(data);
 
-            let balance;
-            if (coin.name === 'doge' || coin.name === 'ltc') {
-                balance = calculateBalance2(data, coin);
-            } else if (coin.name === 'bch') {
-                balance = calculateBalance3(data, coin, address);
-            } else {
-                balance = calculateBalance(data, coin);
-            };
+            let balance = formatBalance(data, coin, address);
 
+            // cos nano api returns shitty string instead of throwing error if wrong address
+            if (isNaN(balance)) {
+                throw Error();
+            }
+
+            console.log('Balance:', balance);
             showBalance(coin, balance);
             createBlockchainLink(coin, address);
         })
@@ -195,22 +210,25 @@ function fetchApi(coin, address) {
         });
 };
 
-// TODO huge refactor of calculating balance
-function calculateBalance({ balance, xrpBalance }, { divisor, decimals }) {
-    if (xrpBalance) {
-        return (xrpBalance / divisor).toFixed(decimals);
+// returns formatted balance amount (diveded and with fixed decimals)
+function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, address) {
+    let balanceAmount;
+    if (balance) {
+        balanceAmount = balance;
+    } else if (xrpBalance) {
+        // XRP API FORMAT
+        balanceAmount = xrpBalance;
+    } else if (data.confirmed_balance) {
+        // DOGE & LTC API FORMAT
+        balanceAmount = data.confirmed_balance;
+    } else if (data[address].address.balance) {
+        // BCH API FORMAT
+        balanceAmount = data[address].address.balance;
     }
-    return (balance / divisor).toFixed(decimals);
+    return (balanceAmount / divisor).toFixed(decimals);
 }
 
-function calculateBalance2({ data }, { divisor, decimals }) {
-    return (data.confirmed_balance / divisor).toFixed(decimals);
-}
-
-function calculateBalance3({ data }, { divisor, decimals }, address) {
-    return (data[address].address.balance / divisor).toFixed(decimals);
-}
-
+// Shows balance and coin name
 function showBalance({ name, fullName, website }, balance) {
     balanceEl.innerHTML = `
                 ${balance}
@@ -224,13 +242,14 @@ function showBalance({ name, fullName, website }, balance) {
     coinNameEl.href = website;
 };
 
+// shows warning message and emoji
 function showWarning(emoji, msg) {
     balanceEl.innerHTML = `${emoji}`
     coinNameEl.classList.add('warning');
-    coinNameEl.innerHTML = `${msg}`
-        ;
+    coinNameEl.innerHTML = `${msg}`;
 }
 
+// creates custom link to blockhain for each coin
 function createBlockchainLink({ name }, address) {
     switch (name) {
         case 'eth':

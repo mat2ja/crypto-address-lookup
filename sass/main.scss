@@ -32,7 +32,6 @@ body {
 	font-size: 1.6rem;
 	background: var(--bg);
 	color: whitesmoke;
-
 	min-height: 100vh;
 }
 
@@ -104,13 +103,11 @@ a {
 	&:link,
 	&:visited {
 		color: var(--orange-1);
-		transition: color 300ms;
 	}
 
-	&:hover,
-	&:focus,
-	&:active {
-		color: white;
+	&:hover span,
+	&:focus span,
+	&:active span {
 	}
 
 	span {
@@ -157,6 +154,7 @@ a {
 	bottom: 0;
 	right: 0;
 	color: var(--orange-1);
+	font-weight: bold;
 }
 
 .coin-name.warning {
@@ -171,4 +169,32 @@ a {
 			transform: translateY(-0.8rem) scale(1.25);
 		}
 	}
+}
+
+.coin-label {
+	padding: 0.75em;
+	text-align: center;
+	font-weight: bold;
+
+	position: absolute;
+	top: -1em;
+	right: -2.5em;
+
+	width: 9rem;
+	border-radius: 0.5rem;
+
+	transform: rotate(40deg);
+	background: var(--orange-1);
+	color: var(--bluegray-dark-2);
+	font-size: 0.8em;
+
+	box-shadow: 0 0 1em #263238;
+	opacity: 1;
+
+	transform: opacity 1000ms;
+}
+
+.coin-label.hide {
+	// transform: scale(0);
+	opacity: 0;
 }
