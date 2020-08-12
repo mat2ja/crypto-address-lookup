@@ -1,0 +1,105 @@
+:root {
+  --orange-1: #f57f17;
+  --orange-2: #ff9800;
+  --bluegray-light-1: #37474f;
+  --bluegray-dark-1: #101f27;
+  --bluegray-dark-2: #000a12;
+  --bg: var(--bluegray-dark-1);
+  --bg-input: var(--bluegray-light-1);
+  --border-dark: var(--bluegray-dark-2); }
+
+a {
+  color: inherit;
+  text-decoration: none; }
+
+* {
+  margin: 0;
+  padding: 0; }
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit; }
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+  font-family: 'IBM Plex Mono', monospace; }
+
+body {
+  font-size: 1.6rem;
+  background: var(--bg);
+  color: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; }
+
+.app {
+  border: 3px solid var(--border-dark);
+  border-radius: 5px;
+  height: 250px;
+  min-width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative; }
+
+.address {
+  font: inherit;
+  font-size: 2.25rem;
+  background: transparent;
+  padding: 0.5em;
+  border: none;
+  background: var(--bg-input);
+  color: var(--orange-2); }
+  .address::placeholder {
+    color: var(--bg); }
+
+:focus {
+  outline: none; }
+
+.balance {
+  font-size: 3.6em;
+  flex: 1;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .balance:link, .balance:visited {
+    color: var(--orange-2); }
+  .balance:hover, .balance:focus, .balance:active {
+    opacity: 0.5; }
+  .balance span {
+    color: var(--orange-1);
+    margin-left: 2rem; }
+  .balance img {
+    display: block;
+    width: 56px;
+    height: 56px; }
+
+.btn {
+  font: inherit;
+  font-weight: bold;
+  color: inherit;
+  margin-top: 1em;
+  padding: 0.5em 1.6em;
+  cursor: pointer;
+  text-transform: uppercase;
+  background: var(--orange-1);
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 1em #263238;
+  transition: all 300ms; }
+  .btn:hover {
+    transform: scale(1.05); }
+
+.coin-name {
+  padding: 0.5em 1em;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: var(--orange-2); }
+  .coin-name img {
+    opacity: 0.8; }

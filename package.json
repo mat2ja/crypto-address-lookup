@@ -1,0 +1,17 @@
+{
+	"name": "crypto-lookup",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"watch:sass": "node-sass sass/main.scss css/style.css -w"
+	},
+	"author": "Matija Osrecki",
+	"license": "ISC",
+	"dependencies": {
+		"node-sass": "^4.14.1"
+	},
+	"devDependencies": {
+		"cryptocurrency-icons": "^0.16.1"
+	}
+}

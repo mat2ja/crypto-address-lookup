@@ -7,19 +7,23 @@
         <title>Crypto Lookup</title>
         <meta name="author" content="Matija Osrečki">
 
-        <link rel="stylesheet" href="./style.css">
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700" rel="stylesheet">
+        <link rel="stylesheet" href="css/style.css">
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     </head>
 
     <body>
         <div class="app">
             <input type='text' class="address" placeholder="Enter your address"></input>
-            <p class="balance">🌚</p>
+            <a class="balance" target='_blank'>🌚</a>
+            <span class="coin-name">
+                <img src="node_modules/cryptocurrency-icons/svg/color/btc.svg" alt="BTC">
+                <img src="node_modules/cryptocurrency-icons/svg/color/eth.svg" alt="BTC">
+                <img src="node_modules/cryptocurrency-icons/svg/color/dash.svg" alt="BTC">
+            </span>
         </div>
         <button class="btn search">Search</button>
 
-        <script src="app.js"></script>
+        <script src="js/app.js"></script>
     </body>
 
 </html>
