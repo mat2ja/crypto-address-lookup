@@ -5,6 +5,7 @@ let coinNameEl = document.querySelector('.coin-name');
 
 // address = '0x6D91F46966F703C61090E829fBe0870d3551CAA9';
 // address = '3CsGhWqT4E17ucePh2U2C3Vgd7pNhw641t';
+// address = 't1MyKSea26LaxeotrDMiZWta8kRJASGNr6t';
 
 let coinsInfo = [
     {
@@ -30,12 +31,28 @@ let coinsInfo = [
         divisor: 1e8,
         decimals: 4,
         website: 'https://www.dash.org'
+    },
+    {
+        name: 'zec',
+        fullName: 'Zcash',
+        symbol: 'zec',
+        divisor: 1,
+        decimals: 8,
+        website: 'https://www.z.cash'
+    },
+    {
+        name: 'bch',
+        fullName: 'bitcoin cash',
+        symbol: 'bch',
+        divisor: 1e8,
+        decimals: 4,
+        website: 'https://www.bitcoincash.org'
     }
 ];
 
 searchBtn.addEventListener('click', () => {
     let address = addressEl.value;
-    let [btcObj, ethObj, dashObj] = coinsInfo;
+    let [btcObj, ethObj, dashObj, zecObj, bchObj] = coinsInfo;
     let coin;
 
     if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
@@ -44,6 +61,10 @@ searchBtn.addEventListener('click', () => {
         coin = ethObj;
     } else if (address.startsWith('X')) {
         coin = dashObj;
+    } else if (address.startsWith('q')) {
+        coin = bchObj;
+    } else if (address.startsWith('t')) {
+        coin = zecObj;
     } else {
         balanceEl.innerHTML = '😕';
         coinNameEl.classList.add('warning');
@@ -67,7 +88,14 @@ addressEl.addEventListener('input', (e) => {
 })
 
 function fetchApi(coin, address) {
-    let fetched = fetch(`https://api.blockcypher.com/v1/${coin.name}/main/addrs/${address}/balance`);
+    let fetched;
+    if (coin.name === 'bch') {
+        fetched = fetch(`https://blockchain.info/rawaddr/${address}`);
+    } else if (coin.name === 'zec') {
+        fetched = fetch(`https://api.zcha.in/v2/mainnet/accounts/${address}`);
+    } else {
+        fetched = fetch(`https://api.blockcypher.com/v1/${coin.name}/main/addrs/${address}/balance`);
+    }
 
     fetched
         .then(response => {
@@ -109,6 +137,10 @@ function showBalance({ name, fullName, website }, balance) {
 function createBlockchainLink({ name }, address) {
     if (name === 'eth') {
         balanceEl.href = `https://etherscan.io/address/${address}`
+    } else if (name === 'bch') {
+        balanceEl.href = `https://www.blockchain.com/bch/${address}`;
+    } else if (name === 'zec') {
+        balanceEl.href = `https://explorer.zcha.in/accounts/${address}`;
     } else {
         balanceEl.href = `https://live.blockcypher.com/${name}/address/${address}/`;
     };

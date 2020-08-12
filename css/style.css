@@ -116,7 +116,9 @@ a {
   right: 0;
   color: var(--orange-1); }
   .coin-name img {
-    opacity: 0.8; }
+    opacity: 0.8;
+    width: 2.8rem;
+    height: 2.8rem; }
 
 .coin-name.warning {
   color: #ff3d00; }
