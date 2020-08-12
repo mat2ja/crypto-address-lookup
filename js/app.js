@@ -5,14 +5,20 @@ let coinNameEl = document.querySelector('.coin-name');
 
 // address = '0x6D91F46966F703C61090E829fBe0870d3551CAA9'; //ETH
 // address = '3CsGhWqT4E17ucePh2U2C3Vgd7pNhw641t'; // BTC
-// address = 'XhvpWU39wKta3qvqtd9tqatNdyPJv8MghX'; // DASH
+// address = 'XfcLDYdv97tc8YYbQqmR1gxBdLq4xfPNdy'; // DASH
 // address = 't1MyKSea26LaxeotrDMiZWta8kRJASGNr6t'; // ZCASH
 // address = 'DSs7SN1wkHNyYfFeJ3t41BTMkf2Z4fgmRp'; // DOGE
 // address = 'LaJfmTU7ZYiCUjcNEbnn6DzkwNtpARkonA'; // LTC
 // address = 'nano_1dptcs1wo89e5q8udktm36gj4ue34t7cqfxdtf5mxao71bufnogpus1kdtes'; // NANO
+// address = 'qr0zq8fl88fzv5d4620y8ucvasxkk4j6gg0d2rwjst'; // BCH
+// address = 'rQ3fNyLjbvcDaPNS4EAJY8aT9zR3uGk17c'; // XRP
+// address = 'DdzFFzCqrhsk3Bqvun2x2CZh3E7xRrdmH9552oWkBQ6JUNtsSgTFzRhZKN7FjdUFwdZa4B5pm4xVnKVGov3Vox53iigr7upJoBcNBLXf'; // ADA
 
-let coinsInfo = [
-    {
+// Best api so far
+/* https://blockchair.com/api/docs#link_300 */
+
+let coinsInfo = {
+    btc: {
         name: 'btc',
         fullName: 'Bitcoin',
         symbol: '₿',
@@ -20,7 +26,7 @@ let coinsInfo = [
         decimals: 8,
         website: 'https://bitcoin.org'
     },
-    {
+    eth: {
         name: 'eth',
         fullName: 'Ethereum',
         symbol: 'Ξ',
@@ -28,7 +34,7 @@ let coinsInfo = [
         decimals: 5,
         website: 'https://ethereum.org'
     },
-    {
+    dash: {
         name: 'dash',
         fullName: 'Dash',
         symbol: 'Dash',
@@ -36,7 +42,7 @@ let coinsInfo = [
         decimals: 4,
         website: 'https://www.dash.org'
     },
-    {
+    zec: {
         name: 'zec',
         fullName: 'Zcash',
         symbol: 'zec',
@@ -44,7 +50,7 @@ let coinsInfo = [
         decimals: 4,
         website: 'https://www.z.cash'
     },
-    {
+    doge: {
         name: 'doge',
         fullName: 'Doge',
         symbol: 'doge',
@@ -52,7 +58,7 @@ let coinsInfo = [
         decimals: 8,
         website: 'https://dogecoin.com'
     },
-    {
+    ltc: {
         name: 'ltc',
         fullName: 'Litecoin',
         symbol: 'ltc',
@@ -60,7 +66,7 @@ let coinsInfo = [
         decimals: 5,
         website: 'https://litecoin.com'
     },
-    {
+    bch: {
         name: 'bch',
         fullName: 'Bitcoin Cash',
         symbol: 'bch',
@@ -68,43 +74,29 @@ let coinsInfo = [
         decimals: 5,
         website: 'https://www.bitcoincash.org'
     },
-    {
+    nano: {
         name: 'nano',
         fullName: 'Nano',
         symbol: 'nano',
         divisor: 1e30,
         decimals: 5,
         website: 'https://nano.org'
+    },
+    xrp: {
+        name: 'xrp',
+        fullName: 'Ripple',
+        symbol: 'xrp',
+        divisor: 1,
+        decimals: 4,
+        website: 'https://ripple.com'
     }
-];
+};
 
 searchBtn.addEventListener('click', () => {
     let address = addressEl.value;
-    let [btcObj, ethObj, dashObj, zecObj, dogeObj, ltcObj, bchObj, nanoObj] = coinsInfo;
-    let coin;
 
-    if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
-        coin = btcObj;
-    } else if (address.startsWith("0x")) {
-        coin = ethObj;
-    } else if (address.startsWith('X')) {
-        coin = dashObj;
-    } else if (address.startsWith('q')) {
-        coin = bchObj;
-    } else if (address.startsWith('t')) {
-        coin = zecObj;
-    } else if (address.startsWith('D') || address.startsWith('a')) {
-        coin = dogeObj;
-    } else if (address.startsWith('L')) {
-        coin = ltcObj;
-    } else if (address.startsWith('nano')) {
-        coin = nanoObj;
-    } else {
-        balanceEl.innerHTML = '😕';
-        coinNameEl.classList.add('warning');
-        coinNameEl.innerHTML = 'No address found';
-        return;
-    }
+    let coin = recognizeCoin(address);
+    if (!coin) return;
 
     fetchApi(coin, address);
 })
@@ -121,19 +113,47 @@ addressEl.addEventListener('input', (e) => {
     }
 })
 
+function recognizeCoin(address) {
+    let { btc, eth, dash, zec, doge, ltc, bch, nano, xrp } = coinsInfo;
+
+    if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
+        coin = btc;
+    } else if (address.startsWith("0x")) {
+        coin = eth;
+    } else if (address.startsWith('X')) {
+        coin = dash;
+    } else if (address.startsWith('q')) {
+        coin = bch;
+    } else if (address.startsWith('t')) {
+        coin = zec;
+    } else if (address.startsWith('D') || address.startsWith('a')) {
+        coin = doge;
+    } else if (address.startsWith('L')) {
+        coin = ltc;
+    } else if (address.startsWith('nano')) {
+        coin = nano;
+    } else if (address.startsWith('r')) {
+        coin = xrp;
+    } else {
+        balanceEl.innerHTML = '😕';
+        coinNameEl.classList.add('warning');
+        coinNameEl.innerHTML = 'No address found';
+        return;
+    }
+    return coin;
+}
 function fetchApi(coin, address) {
     let fetched;
-    if (coin.name === 'bch') {
-        // TODO api doest work for bch
-        fetched = fetch(`https://blockchain.info/rawaddr/${address}`);
-    } else if (coin.name === 'zec') {
+    if (coin.name === 'zec') {
         fetched = fetch(`https://api.zcha.in/v2/mainnet/accounts/${address}`);
-    } else if (coin.name === 'doge') {
-        fetched = fetch(`https://sochain.com/api/v2/get_address_balance/${coin.name.toUpperCase()}/${address}`);
-    } else if (coin.name === 'ltc') {
+    } else if (coin.name === 'doge' || coin.name === 'ltc') {
         fetched = fetch(`https://sochain.com/api/v2/get_address_balance/${coin.name.toUpperCase()}/${address}`);
     } else if (coin.name === 'nano') {
         fetched = fetch(`https://api.nanex.cc:443/?action=account_info&account=${address}`);
+    } else if (coin.name === 'bch') {
+        fetched = fetch(`https://api.blockchair.com/${'bitcoin-cash'}/dashboards/address/${address}`);
+    } else if (coin.name === 'xrp') {
+        fetched = fetch(`https://api.xrpscan.com/api/v1/account/${address}`);
     } else {
         fetched = fetch(`https://api.blockcypher.com/v1/${coin.name}/main/addrs/${address}/balance`);
     }
@@ -151,7 +171,9 @@ function fetchApi(coin, address) {
 
             let balance;
             if (coin.name === 'doge' || coin.name === 'ltc') {
-                balance = calculateBalanceAlt(data, coin);
+                balance = calculateBalance2(data, coin);
+            } else if (coin.name === 'bch') {
+                balance = calculateBalance3(data, coin, address);
             } else {
                 balance = calculateBalance(data, coin);
             }
@@ -169,13 +191,19 @@ function fetchApi(coin, address) {
         });
 };
 
-function calculateBalance({ balance }, { divisor, decimals }) {
+function calculateBalance({ balance, xrpBalance }, { divisor, decimals }) {
+    if (xrpBalance) {
+        return (xrpBalance / divisor).toFixed(decimals);
+    }
     return (balance / divisor).toFixed(decimals);
 }
 
-function calculateBalanceAlt({ data }, { divisor, decimals }) {
-    console.log(data.confirmed_balance);
+function calculateBalance2({ data }, { divisor, decimals }) {
     return (data.confirmed_balance / divisor).toFixed(decimals);
+}
+
+function calculateBalance3({ data }, { divisor, decimals }, address) {
+    return (data[address].address.balance / divisor).toFixed(decimals);
 }
 
 function showBalance({ name, fullName, website }, balance) {
@@ -192,18 +220,25 @@ function showBalance({ name, fullName, website }, balance) {
 };
 
 function createBlockchainLink({ name }, address) {
-    if (name === 'eth') {
-        balanceEl.href = `https://etherscan.io/address/${address}`
-    } else if (name === 'bch') {
-        balanceEl.href = `https://www.blockchain.com/bch/${address}`;
-    } else if (name === 'zec') {
-        balanceEl.href = `https://explorer.zcha.in/accounts/${address}`;
-    } else if (name === 'doge') {
-        balanceEl.href = `https://dogechain.info/address/${address}`;
-    } else if (name === 'nano') {
-        balanceEl.href = `https://nanocrawler.cc/explorer/account/${address}/history`;
-    } else {
-        balanceEl.href = `https://live.blockcypher.com/${name}/address/${address}/`;
-    };
+
+    switch (name) {
+        case 'eth':
+            balanceEl.href = `https://etherscan.io/address/${address}`;
+            break;
+        case 'zec':
+            balanceEl.href = `https://explorer.zcha.in/accounts/${address}`;
+            break;
+        case 'doge':
+            balanceEl.href = `https://dogechain.info/address/${address}`;
+            break;
+        case 'nano':
+            balanceEl.href = `https://nanocrawler.cc/explorer/account/${address}/history`;
+            break;
+        case 'xrp':
+            balanceEl.href = `https://xrpscan.com/account/${address}`;
+            break;
+        default:
+            balanceEl.href = `https://live.blockcypher.com/${name}/address/${address}/`;
+    }
 };
 
