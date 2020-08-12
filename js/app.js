@@ -12,21 +12,24 @@ let coinsInfo = [
         fullName: 'Bitcoin',
         symbol: '₿',
         divisor: 1e8,
-        decimals: 8
+        decimals: 8,
+        website: 'https://bitcoin.org'
     },
     {
         name: 'eth',
         fullName: 'Ethereum',
         symbol: 'Ξ',
         divisor: 1e18,
-        decimals: 6
+        decimals: 6,
+        website: 'https://ethereum.org'
     },
     {
         name: 'dash',
         fullName: 'Dash',
         symbol: 'Dash',
         divisor: 1e8,
-        decimals: 4
+        decimals: 4,
+        website: 'https://www.dash.org'
     }
 ];
 
@@ -43,6 +46,7 @@ searchBtn.addEventListener('click', () => {
         coin = dashObj;
     } else {
         balanceEl.innerHTML = '😕';
+        coinNameEl.classList.add('warning');
         coinNameEl.innerHTML = 'No address found';
         return;
     }
@@ -53,9 +57,11 @@ searchBtn.addEventListener('click', () => {
 addressEl.addEventListener('input', (e) => {
     if (!addressEl.value) {
         balanceEl.innerHTML = '🌚';
+        coinNameEl.classList.remove('warning');
         coinNameEl.innerHTML = '';
     } else {
         balanceEl.innerHTML = '🚀';
+        coinNameEl.classList.remove('warning');
         coinNameEl.innerHTML = '';
     }
 })
@@ -87,14 +93,17 @@ function calculateBalance({ balance }, { divisor, decimals }) {
     return (balance / divisor).toFixed(decimals);
 }
 
-function showBalance({ name, fullName }, balance) {
+function showBalance({ name, fullName, website }, balance) {
     balanceEl.innerHTML = `
                 ${balance}
                 <span>
                     <img src='./node_modules/cryptocurrency-icons/svg/color/${name}.svg'>
                 </span>
             `;
+
+    coinNameEl.classList.remove('warning');
     coinNameEl.innerHTML = fullName;
+    coinNameEl.href = website;
 };
 
 function createBlockchainLink({ name }, address) {

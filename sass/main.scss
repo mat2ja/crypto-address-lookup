@@ -30,7 +30,7 @@ html {
 body {
 	font-size: 1.6rem;
 	background: var(--bg);
-	color: var(--bg);
+	color: whitesmoke;
 
 	display: flex;
 	flex-direction: column;
@@ -55,11 +55,12 @@ a {
 	text-decoration: none;
 }
 
-.app {
-	border: 3px solid var(--border-dark);
-	border-radius: 5px;
-	height: 250px;
-	min-width: 600px;
+.box {
+	border: 0.3rem solid var(--border-dark);
+	border-radius: 0.5rem;
+	height: 25rem;
+	max-width: 60rem;
+	width: 100%;
 
 	display: flex;
 	flex-direction: column;
@@ -112,8 +113,8 @@ a {
 
 	img {
 		display: block;
-		width: 56px;
-		height: 56px;
+		width: 5.6rem;
+		height: 5.6rem;
 	}
 }
 .stats {
@@ -125,7 +126,7 @@ a {
 .btn {
 	font: inherit;
 	font-weight: bold;
-	color: inherit;
+	color: var(--border-dark);
 	margin-top: 1em;
 	padding: 0.5em 1.6em;
 
@@ -133,7 +134,7 @@ a {
 	text-transform: uppercase;
 	background: var(--orange-1);
 	border: none;
-	border-radius: 5px;
+	border-radius: 0.5rem;
 
 	box-shadow: 0 0 1em #263238;
 
@@ -154,4 +155,8 @@ a {
 	img {
 		opacity: 0.8;
 	}
+}
+
+.coin-name.warning {
+	color: #ff3d00;
 }
