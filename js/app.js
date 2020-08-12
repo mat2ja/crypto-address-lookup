@@ -96,12 +96,18 @@ searchBtn.addEventListener('click', () => {
     let address = addressEl.value;
 
     let coin = recognizeCoin(address);
-    if (!coin) return;
+    if (!coin) {
+        balanceEl.innerHTML = '😕';
+        coinNameEl.classList.add('warning');
+        coinNameEl.innerHTML = 'No address found';
+        return
+    };
 
     fetchApi(coin, address);
 })
 
 addressEl.addEventListener('input', (e) => {
+    // if value is empty
     if (!addressEl.value) {
         balanceEl.innerHTML = '🌚';
         coinNameEl.classList.remove('warning');
@@ -115,6 +121,7 @@ addressEl.addEventListener('input', (e) => {
 
 function recognizeCoin(address) {
     let { btc, eth, dash, zec, doge, ltc, bch, nano, xrp } = coinsInfo;
+    let coin = '';
 
     if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
         coin = btc;
@@ -134,14 +141,11 @@ function recognizeCoin(address) {
         coin = nano;
     } else if (address.startsWith('r')) {
         coin = xrp;
-    } else {
-        balanceEl.innerHTML = '😕';
-        coinNameEl.classList.add('warning');
-        coinNameEl.innerHTML = 'No address found';
-        return;
     }
+
     return coin;
 }
+
 function fetchApi(coin, address) {
     let fetched;
     if (coin.name === 'zec') {

@@ -45,7 +45,7 @@ a {
   text-decoration: none; }
 
 .box {
-  border: 0.3rem solid var(--border-dark);
+  border: 0.5rem solid var(--border-dark);
   border-radius: 0.5rem;
   height: 30rem;
   max-width: 60rem;
@@ -115,10 +115,9 @@ a {
   bottom: 0;
   right: 0;
   color: var(--orange-1); }
-  .coin-name img {
-    opacity: 0.8;
-    width: 2.8rem;
-    height: 2.8rem; }
 
 .coin-name.warning {
   color: #ff3d00; }
+
+.supported-coins {
+  margin: -1.6rem; }
