@@ -15,9 +15,6 @@ let coinNameEl = document.querySelector('.coin-name');
 // address = 'rQ3fNyLjbvcDaPNS4EAJY8aT9zR3uGk17c'; // XRP
 // address = 'DdzFFzCqrhsk3Bqvun2x2CZh3E7xRrdmH9552oWkBQ6JUNtsSgTFzRhZKN7FjdUFwdZa4B5pm4xVnKVGov3Vox53iigr7upJoBcNBLXf'; // ADA
 
-// Best api so far
-/* https://blockchair.com/api/docs#link_300 */
-
 let coinsInfo = {
     btc: {
         name: 'btc',
@@ -187,7 +184,7 @@ function fetchApi(coin, address) {
                 balance = calculateBalance3(data, coin, address);
             } else {
                 balance = calculateBalance(data, coin);
-            }
+            };
 
             showBalance(coin, balance);
             createBlockchainLink(coin, address);
@@ -198,6 +195,7 @@ function fetchApi(coin, address) {
         });
 };
 
+// TODO huge refactor of calculating balance
 function calculateBalance({ balance, xrpBalance }, { divisor, decimals }) {
     if (xrpBalance) {
         return (xrpBalance / divisor).toFixed(decimals);
