@@ -1,6 +1,5 @@
 :root {
-	--orange-1: #f57f17;
-	--orange-2: #ff9800;
+	--orange-1: #ff9800;
 
 	--bluegray-light-1: #37474f;
 	--bluegray-dark-1: #101f27;
@@ -65,7 +64,7 @@ body {
 	padding: 0.5em;
 	border: none;
 	background: var(--bg-input);
-	color: var(--orange-2);
+	color: var(--orange-1);
 
 	&::placeholder {
 		color: var(--bg);
@@ -78,25 +77,26 @@ body {
 
 .balance {
 	font-size: 3.6em;
-	flex: 1;
-	text-align: center;
+    text-align: center;
+    height: 100%;
 
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
 	&:link,
 	&:visited {
-		color: var(--orange-2);
+		color: var(--orange-1);
+		transition: opacity 300ms;
 	}
 
 	&:hover,
 	&:focus,
 	&:active {
-		opacity: 0.5;
+		opacity: 0.85;
 	}
 
 	span {
-		color: var(--orange-1);
 		margin-left: 2rem;
 	}
 
@@ -106,7 +106,9 @@ body {
 		height: 56px;
 	}
 }
-
+.stats {
+	flex: 1;
+}
 .btn {
 	font: inherit;
 	font-weight: bold;
@@ -134,7 +136,7 @@ body {
 	position: absolute;
 	bottom: 0;
 	right: 0;
-	color: var(--orange-2);
+	color: var(--orange-1);
 
 	img {
 		opacity: 0.8;

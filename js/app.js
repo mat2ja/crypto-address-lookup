@@ -8,21 +8,21 @@ let coinNameEl = document.querySelector('.coin-name');
 
 let coinsInfo = [
     {
-        name: 'BTC',
+        name: 'btc',
         fullName: 'Bitcoin',
         symbol: '₿',
         divisor: 1e8,
         decimals: 8
     },
     {
-        name: 'ETH',
+        name: 'eth',
         fullName: 'Ethereum',
         symbol: 'Ξ',
         divisor: 1e18,
         decimals: 6
     },
     {
-        name: 'DASH',
+        name: 'dash',
         fullName: 'Dash',
         symbol: 'Dash',
         divisor: 1e8,
@@ -30,24 +30,38 @@ let coinsInfo = [
     }
 ];
 
-
 searchBtn.addEventListener('click', () => {
     let address = addressEl.value;
-    let coin;
     let [btcObj, ethObj, dashObj] = coinsInfo;
+    let coin;
 
     if (address.startsWith('1') || address.startsWith('3') || address.startsWith('bc1')) {
-        // fetched = fetchBitcoin(address);
         coin = btcObj;
     } else if (address.startsWith("0x")) {
-        // fetched = fetchEthereum(address);
         coin = ethObj;
     } else if (address.startsWith('X')) {
-        // fetched = fetchDash(address);
         coin = dashObj;
+    } else {
+        balanceEl.innerHTML = '😕';
+        coinNameEl.innerHTML = 'No address found';
+        return;
     }
 
-    let fetched = fetch(`https://api.blockcypher.com/v1/${coin.name.toLowerCase()}/main/addrs/${address}/balance`);;
+    fetchApi(coin, address);
+})
+
+addressEl.addEventListener('input', (e) => {
+    if (!addressEl.value) {
+        balanceEl.innerHTML = '🌚';
+        coinNameEl.innerHTML = '';
+    } else {
+        balanceEl.innerHTML = '🚀';
+        coinNameEl.innerHTML = '';
+    }
+})
+
+function fetchApi(coin, address) {
+    let fetched = fetch(`https://api.blockcypher.com/v1/${coin.name}/main/addrs/${address}/balance`);
 
     fetched
         .then(response => {
@@ -60,44 +74,34 @@ searchBtn.addEventListener('click', () => {
         .then(data => {
             console.log(data);
 
-            let balance = data.balance;
-            let shownBalance = (balance / coin.divisor).toFixed(coin.decimals);
-
-            if (coin.name === 'ETH') {
-                balanceEl.href = `https://etherscan.io/address/${address}`
-            } else {
-                balanceEl.href = `https://live.blockcypher.com/${coin.name.toLowerCase()}/address/${address}/`;
-            };
-
-            balanceEl.innerHTML = `
-                ${shownBalance}
-                <span>
-                    <img src='./node_modules/cryptocurrency-icons/svg/color/${coin.name.toLowerCase()}.svg'>
-                </span>
-            `;
-            coinNameEl.innerHTML = coin.fullName;
+            showBalance(coin, calculateBalance(data, coin));
+            createBlockchainLink(coin, address);
         })
         .catch(err => {
             console.log(err);
             balanceEl.innerHTML = '🤬'
         });
-})
+};
 
-function fetchEthereum(address) {
-    return fetch(`https://api.blockcypher.com/v1/eth/main/addrs/${address}/balance`);
-}
-function fetchBitcoin(address) {
-    return fetch(`https://api.blockcypher.com/v1/btc/main/addrs/${address}/balance`)
-}
-function fetchDash(address) {
-    return fetch(`https://api.blockcypher.com/v1/dash/main/addrs/${address}/balance`)
+function calculateBalance({ balance }, { divisor, decimals }) {
+    return (balance / divisor).toFixed(decimals);
 }
 
-addressEl.addEventListener('input', (e) => {
-    if (!addressEl.value) {
-        balanceEl.innerHTML = '🌚';
-        coinNameEl.innerHTML = '';
+function showBalance({ name, fullName }, balance) {
+    balanceEl.innerHTML = `
+                ${balance}
+                <span>
+                    <img src='./node_modules/cryptocurrency-icons/svg/color/${name}.svg'>
+                </span>
+            `;
+    coinNameEl.innerHTML = fullName;
+};
+
+function createBlockchainLink({ name }, address) {
+    if (name === 'eth') {
+        balanceEl.href = `https://etherscan.io/address/${address}`
     } else {
-        balanceEl.innerHTML = '🚀';
-    }
-})
+        balanceEl.href = `https://live.blockcypher.com/${name}/address/${address}/`;
+    };
+};
+

@@ -1,6 +1,5 @@
 :root {
-  --orange-1: #f57f17;
-  --orange-2: #ff9800;
+  --orange-1: #ff9800;
   --bluegray-light-1: #37474f;
   --bluegray-dark-1: #101f27;
   --bluegray-dark-2: #000a12;
@@ -53,7 +52,7 @@ body {
   padding: 0.5em;
   border: none;
   background: var(--bg-input);
-  color: var(--orange-2); }
+  color: var(--orange-1); }
   .address::placeholder {
     color: var(--bg); }
 
@@ -62,22 +61,25 @@ body {
 
 .balance {
   font-size: 3.6em;
-  flex: 1;
   text-align: center;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center; }
   .balance:link, .balance:visited {
-    color: var(--orange-2); }
-  .balance:hover, .balance:focus, .balance:active {
-    opacity: 0.5; }
-  .balance span {
     color: var(--orange-1);
+    transition: opacity 300ms; }
+  .balance:hover, .balance:focus, .balance:active {
+    opacity: 0.85; }
+  .balance span {
     margin-left: 2rem; }
   .balance img {
     display: block;
     width: 56px;
     height: 56px; }
+
+.stats {
+  flex: 1; }
 
 .btn {
   font: inherit;
@@ -100,6 +102,6 @@ body {
   position: absolute;
   bottom: 0;
   right: 0;
-  color: var(--orange-2); }
+  color: var(--orange-1); }
   .coin-name img {
     opacity: 0.8; }
