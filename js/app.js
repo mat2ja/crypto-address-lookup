@@ -1,3 +1,4 @@
+let appWrapper = document.querySelector('.app');
 let addressEl = document.querySelector('.address');
 let balanceEl = document.querySelector('.balance');
 let searchBtn = document.querySelector('.search');
@@ -92,14 +93,13 @@ let coinsInfo = {
     }
 };
 
-searchBtn.addEventListener('click', () => {
+appWrapper.addEventListener('submit', (e) => {
+    e.preventDefault();
     let address = addressEl.value;
 
     let coin = recognizeCoin(address);
     if (!coin) {
-        balanceEl.innerHTML = '😕';
-        coinNameEl.classList.add('warning');
-        coinNameEl.innerHTML = 'No address found';
+        showWarning('😕', 'No address found');
         return
     };
 
@@ -148,19 +148,26 @@ function recognizeCoin(address) {
 
 function fetchApi(coin, address) {
     let fetched;
-    if (coin.name === 'zec') {
-        fetched = fetch(`https://api.zcha.in/v2/mainnet/accounts/${address}`);
-    } else if (coin.name === 'doge' || coin.name === 'ltc') {
-        fetched = fetch(`https://sochain.com/api/v2/get_address_balance/${coin.name.toUpperCase()}/${address}`);
-    } else if (coin.name === 'nano') {
-        fetched = fetch(`https://api.nanex.cc:443/?action=account_info&account=${address}`);
-    } else if (coin.name === 'bch') {
-        fetched = fetch(`https://api.blockchair.com/${'bitcoin-cash'}/dashboards/address/${address}`);
-    } else if (coin.name === 'xrp') {
-        fetched = fetch(`https://api.xrpscan.com/api/v1/account/${address}`);
-    } else {
-        fetched = fetch(`https://api.blockcypher.com/v1/${coin.name}/main/addrs/${address}/balance`);
-    }
+    switch (coin.name) {
+        case 'zec':
+            fetched = fetch(`https://api.zcha.in/v2/mainnet/accounts/${address}`);
+            break;
+        case 'doge':
+        case 'ltc':
+            fetched = fetch(`https://sochain.com/api/v2/get_address_balance/${coin.name.toUpperCase()}/${address}`);
+            break;
+        case 'nano':
+            fetched = fetch(`https://api.nanex.cc:443/?action=account_info&account=${address}`);
+            break;
+        case 'bch':
+            fetched = fetch(`https://api.blockchair.com/${'bitcoin-cash'}/dashboards/address/${address}`);
+            break;
+        case 'xrp':
+            fetched = fetch(`https://api.xrpscan.com/api/v1/account/${address}`);
+            break;
+        default:
+            fetched = fetch(`https://api.blockcypher.com/v1/${coin.name}/main/addrs/${address}/balance`);
+    };
 
     fetched
         .then(response => {
@@ -183,15 +190,11 @@ function fetchApi(coin, address) {
             }
 
             showBalance(coin, balance);
-
-
             createBlockchainLink(coin, address);
         })
         .catch(err => {
             console.log(err);
-            balanceEl.innerHTML = '🤬'
-            coinNameEl.classList.add('warning');
-            coinNameEl.innerHTML = 'Something went wrong';
+            showWarning('😕', 'No address found');
         });
 };
 
@@ -223,8 +226,14 @@ function showBalance({ name, fullName, website }, balance) {
     coinNameEl.href = website;
 };
 
-function createBlockchainLink({ name }, address) {
+function showWarning(emoji, msg) {
+    balanceEl.innerHTML = `${emoji}`
+    coinNameEl.classList.add('warning');
+    coinNameEl.innerHTML = `${msg}`
+        ;
+}
 
+function createBlockchainLink({ name }, address) {
     switch (name) {
         case 'eth':
             balanceEl.href = `https://etherscan.io/address/${address}`;
