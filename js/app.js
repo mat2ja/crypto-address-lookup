@@ -17,7 +17,7 @@ const coinsInfo = {
         fullName: 'Bitcoin',
         symbol: '₿',
         divisor: 1e8,
-        decimals: 8,
+        decimals: 5,
         website: 'https://bitcoin.org'
     },
     eth: {
@@ -25,7 +25,7 @@ const coinsInfo = {
         fullName: 'Ethereum',
         symbol: 'Ξ',
         divisor: 1e18,
-        decimals: 5,
+        decimals: 3,
         website: 'https://ethereum.org'
     },
     dash: {
@@ -33,7 +33,7 @@ const coinsInfo = {
         fullName: 'Dash',
         symbol: 'Dash',
         divisor: 1e8,
-        decimals: 4,
+        decimals: 3,
         website: 'https://www.dash.org'
     },
     zec: {
@@ -41,7 +41,7 @@ const coinsInfo = {
         fullName: 'Zcash',
         symbol: 'zec',
         divisor: 1,
-        decimals: 4,
+        decimals: 3,
         website: 'https://www.z.cash'
     },
     doge: {
@@ -49,7 +49,7 @@ const coinsInfo = {
         fullName: 'Doge',
         symbol: 'doge',
         divisor: 1,
-        decimals: 4,
+        decimals: 3,
         website: 'https://dogecoin.com'
     },
     ltc: {
@@ -57,7 +57,7 @@ const coinsInfo = {
         fullName: 'Litecoin',
         symbol: 'ltc',
         divisor: 1,
-        decimals: 4,
+        decimals: 3,
         website: 'https://litecoin.com'
     },
     bch: {
@@ -65,7 +65,7 @@ const coinsInfo = {
         fullName: 'Bitcoin Cash',
         symbol: 'bch',
         divisor: 1e8,
-        decimals: 4,
+        decimals: 3,
         website: 'https://www.bitcoincash.org'
     },
     nano: {
@@ -73,7 +73,7 @@ const coinsInfo = {
         fullName: 'Nano',
         symbol: 'nano',
         divisor: 1e30,
-        decimals: 4,
+        decimals: 3,
         website: 'https://nano.org'
     },
     xrp: {
@@ -81,7 +81,7 @@ const coinsInfo = {
         fullName: 'Ripple',
         symbol: 'xrp',
         divisor: 1,
-        decimals: 4,
+        decimals: 3,
         website: 'https://ripple.com'
     }
 };
