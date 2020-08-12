@@ -1,0 +1,103 @@
+:root {
+	--orange-1: #f57f17;
+	--orange-2: #ff9800;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+html {
+	box-sizing: border-box;
+	font-size: 62.5%;
+	/* font-family: 'Lato', sans-serif; */
+	font-family: 'IBM Plex Mono', monospace;
+}
+
+body {
+	font-size: 1.6rem;
+	background: #101f27;
+	color: #000a12;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	min-height: 100vh;
+}
+
+.app {
+	border: 3px solid #000a12;
+	height: 250px;
+	min-width: 600px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.address {
+	font: inherit;
+	font-size: 2.25rem;
+	background: transparent;
+	padding: 0.5em;
+	border: none;
+    background: #37474f;
+    color: var(--orange-2);
+}
+
+:focus {
+	outline: none;
+}
+
+.address::placeholder {
+	color: var(--orange-2);
+    color: #000a12;
+    
+}
+
+.balance {
+	font-size: 3.6em;
+	flex: 1;
+	text-align: center;
+	color: var(--orange-2);
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.balance span {
+	font-size: 0.5em;
+	color: var(--orange-1);
+	margin-left: 1rem;
+}
+
+.btn {
+	font: inherit;
+	font-weight: bold;
+	color: inherit;
+	margin-top: 1em;
+	padding: 0.5em 1.6em;
+
+	cursor: pointer;
+	text-transform: uppercase;
+	background: var(--orange-1);
+	border: none;
+	border-radius: 4px;
+
+	box-shadow: 0 0 1em #263238;
+
+	transition: all 300ms;
+}
+
+.btn:hover {
+	transform: scale(1.05);
+}
