@@ -215,7 +215,7 @@ function showBalance({ name, fullName, website }, balance) {
     balanceEl.innerHTML = `
                 ${balance}
                 <span>
-                    <img src='./node_modules/cryptocurrency-icons/svg/color/${name}.svg'>
+                    <img src='./img/svg/color/${name}.svg'>
                 </span>
             `;
 
