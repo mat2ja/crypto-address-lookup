@@ -120,12 +120,22 @@ a {
 		height: 5.6rem;
 	}
 }
+
 .stats {
 	flex: 1;
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 }
+
+.coin-price {
+	margin-top: .5em;
+	text-align: center;
+	font-size: 1.6em;
+	color: hsla(36, 100%, 50%, 0.6);
+}
+
 .btn {
 	font: inherit;
 	font-weight: bold;

@@ -3,15 +3,18 @@ const appWrapper = document.querySelector('.app');
 const cardEl = document.querySelector('.card');
 const addressEl = document.querySelector('.address');
 const balanceEl = document.querySelector('.balance');
+const priceEl = document.querySelector('.coin-price');
 const searchBtn = document.querySelector('.search');
 const coinNameEl = document.querySelector('.coin-name');
 
-const coinLabelEL = document.querySelector('.coin-label');
+const coinLabelEl = document.querySelector('.coin-label');
 const supportedCoins = document.querySelector('.supported-coins');
 const coins = supportedCoins.querySelectorAll('img');
 
 const defaultLink = 'https://www.youtube.com/watch?v=_PXU0thDHCU';
 const defaultLink2 = 'https://www.youtube.com/watch?v=dYJH3li2zgQ';
+
+let apiKey = 'ff8bd370eecc99eba2c6a8a69dc001cf';
 
 balanceEl.href = defaultLink;
 
@@ -47,7 +50,7 @@ const coinsInfo = {
     },
     doge: {
         symbol: 'doge',
-        name: 'Doge',
+        name: 'Dogecoin',
         divisor: 1,
         decimals: 3,
         website: 'https://dogecoin.com'
@@ -109,7 +112,32 @@ appWrapper.addEventListener('submit', (e) => {
         return
     };
 
-    fetchApi(coin, address);
+    // fetchBalance(coin, address);
+
+
+    function getBalance() {
+        return fetchBalance(coin, address);
+    }
+
+    getBalance().then(balance => {
+        console.log(balance);
+    });
+
+
+    // async function getBalance() {
+    //     const response = await fetch(`https://api.blockcypher.com/v1/${coin.symbol}/main/addrs/${address}/balance`);
+    //     const data = await response.json();
+
+    //     return formatBalance(data, coin, address);
+
+    // };
+    // getBalance().then(b => {
+    //     console.log(b);
+    // });
+
+
+
+
 })
 
 // listens for change on input, checks if it is empty to show some placeholder
@@ -118,14 +146,14 @@ addressEl.addEventListener('input', (e) => {
     if (!addressEl.value) {
         balanceEl.innerHTML = '🌚';
         coinNameEl.classList.remove('warning');
-        coinNameEl.innerHTML = '';
-        balanceEl.href = defaultLink;
     } else {
         balanceEl.innerHTML = '🚀';
         coinNameEl.classList.remove('warning');
-        coinNameEl.innerHTML = '';
-        balanceEl.href = defaultLink;
     }
+    coinNameEl.innerHTML = '';
+    balanceEl.href = defaultLink;
+    priceEl.innerText = '';
+
 })
 
 // recognizes coin address and returns key of recognized coin object
@@ -156,30 +184,31 @@ function recognizeCoin(address) {
     return coin;
 }
 
-function fetchApi(coin, address) {
-    let fetched;
+function fetchBalance(coin, address) {
+    let url;
     switch (coin.symbol) {
         case 'zec':
-            fetched = fetch(`https://api.zcha.in/v2/mainnet/accounts/${address}`);
+            url = `https://api.zcha.in/v2/mainnet/accounts/${address}`;
             break;
         case 'doge':
         case 'ltc':
-            fetched = fetch(`https://sochain.com/api/v2/get_address_balance/${coin.symbol}/${address}`);
+            url = `https://sochain.com/api/v2/get_address_balance/${coin.symbol}/${address}`;
             break;
         case 'nano':
-            fetched = fetch(`https://api.nanex.cc:443/?action=account_info&account=${address}`);
+            url = `https://api.nanex.cc:443/?action=account_info&account=${address}`;
             break;
         case 'bch':
-            fetched = fetch(`https://api.blockchair.com/${'bitcoin-cash'}/dashboards/address/${address}`);
+            url = `https://api.blockchair.com/${'bitcoin-cash'}/dashboards/address/${address}`;
             break;
         case 'xrp':
-            fetched = fetch(`https://api.xrpscan.com/api/v1/account/${address}`);
+            url = `https://api.xrpscan.com/api/v1/account/${address}`;
             break;
         default:
-            fetched = fetch(`https://api.blockcypher.com/v1/${coin.symbol}/main/addrs/${address}/balance`);
+            url = `https://api.blockcypher.com/v1/${coin.symbol}/main/addrs/${address}/balance`;
     };
 
-    fetched
+
+    return fetch(url)
         .then(response => {
             if (!response.ok) {
                 // throws error so catch catches it
@@ -200,12 +229,46 @@ function fetchApi(coin, address) {
             console.log('Balance:', balance);
             showBalance(coin, balance);
             createBlockchainLink(coin, address);
+
+            fetchStats(coin, balance);
+
+            return balance;
+
         })
         .catch(err => {
             console.log(err);
             showWarning('😕', 'No address found');
         });
 };
+
+function fetchStats(coin, balance) {
+    let fiat = 'USD';
+    let url = `https://api.nomics.com/v1/currencies/ticker?key=${apiKey}&ids=${coin.symbol.toUpperCase()}&convert=${fiat}`;
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                // throws error so catch catches it
+                throw new Error(`Status Code Error: ${response.status}`);
+            };
+            return response.json();
+        })
+        .then(data => {
+            let exchangeRate = data[0].price;
+            console.log('price: ', exchangeRate);
+            let price = calculatePrice(balance, exchangeRate);
+            console.log('price: ', price);
+
+            showPrice(price);
+        })
+        .catch(err => {
+            console.log(err);
+            showWarning('😳', 'Something went wrong');
+        });
+}
+
+function calculatePrice(amount, price) {
+    return amount * price;
+}
 
 // returns formatted balance amount (diveded and with fixed decimals)
 function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, address) {
@@ -239,9 +302,14 @@ function showBalance({ symbol, name, website }, balance) {
     coinNameEl.href = website;
 };
 
+function showPrice(price) {
+    priceEl.innerText = `$${price.toFixed(2)}`
+}
+
 // shows warning message and emoji
 function showWarning(emoji, msg) {
     balanceEl.innerHTML = `${emoji}`
+    priceEl.innerText = '';
     coinNameEl.classList.add('warning');
     coinNameEl.innerHTML = `${msg}`;
     coinNameEl.href = defaultLink2;
