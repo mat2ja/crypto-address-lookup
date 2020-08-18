@@ -277,16 +277,18 @@ function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, add
     let balanceAmount;
     if (balance >= 0) {
         balanceAmount = balance;
-    } else if (xrpBalance >= 0) {
+    } else if (xrpBalance) {
         // XRP API FORMAT
         balanceAmount = xrpBalance;
-    } else if (data.confirmed_balance >= 0) {
+    } else if (data.confirmed_balance) {
         // DOGE & LTC API FORMAT
+        // TODO stopped working
+        console.log(data.confirmed_balance);
         balanceAmount = data.confirmed_balance;
-    } else if (data[address].address.balance >= 0) {
+    } else if (data[address].address.balance) {
         // BCH API FORMAT
         balanceAmount = data[address].address.balance;
-    } 
+    }
     // TODO fix zero addresses
     return (balanceAmount / divisor).toFixed(decimals);
 }
@@ -339,6 +341,9 @@ function createBlockchainLink({ symbol }, address) {
             link = `https://xrpscan.com/account/${address}`;
             break;
         case 'dash':
+            link = `https://live.blockcypher.com/${symbol}/address/${address}/`;
+            break;
+        case 'ltc':
             link = `https://live.blockcypher.com/${symbol}/address/${address}/`;
             break;
         default:
