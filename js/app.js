@@ -11,6 +11,7 @@ const supportedCoins = document.querySelector('.supported-coins');
 const coins = supportedCoins.querySelectorAll('img');
 
 const defaultLink = 'https://www.youtube.com/watch?v=_PXU0thDHCU';
+const defaultLink2 = 'https://www.youtube.com/watch?v=dYJH3li2zgQ';
 
 balanceEl.href = defaultLink;
 
@@ -84,7 +85,7 @@ const coinsInfo = {
 // Add coin name label on hover
 for (let coin of coins) {
     coin.addEventListener('mouseover', () => {
-        document.querySelector('.coin-label').classList.remove('hide')
+        document.querySelector('.coin-label').classList.remove('hide');
         document.querySelector('.coin-label').innerText = coin.dataset.name;
     })
 }
@@ -243,29 +244,36 @@ function showWarning(emoji, msg) {
     balanceEl.innerHTML = `${emoji}`
     coinNameEl.classList.add('warning');
     coinNameEl.innerHTML = `${msg}`;
+    coinNameEl.href = defaultLink2;
 };
 
 
 // creates custom link to blockhain for each coin
 function createBlockchainLink({ symbol }, address) {
+    let link;
     switch (symbol) {
         case 'eth':
-            balanceEl.href = `https://etherscan.io/address/${address}`;
+            link = `https://etherscan.io/address/${address}`;
             break;
         case 'zec':
-            balanceEl.href = `https://explorer.zcha.in/accounts/${address}`;
+            link = `https://explorer.zcha.in/accounts/${address}`;
             break;
         case 'doge':
-            balanceEl.href = `https://dogechain.info/address/${address}`;
+            link = `https://dogechain.info/address/${address}`;
             break;
         case 'nano':
-            balanceEl.href = `https://nanocrawler.cc/explorer/account/${address}/history`;
+            link = `https://nanocrawler.cc/explorer/account/${address}/history`;
             break;
         case 'xrp':
-            balanceEl.href = `https://xrpscan.com/account/${address}`;
+            link = `https://xrpscan.com/account/${address}`;
+            break;
+        case 'dash':
+            link = `https://live.blockcypher.com/${symbol}/address/${address}/`;
             break;
         default:
-            balanceEl.href = `https://live.blockcypher.com/${symbol}/address/${address}/`;
+            link = `https://www.blockchain.com/${symbol}/address/${address}`;
     }
+
+    balanceEl.href = link;
 };
 
