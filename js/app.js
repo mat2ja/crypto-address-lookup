@@ -10,76 +10,69 @@ const coinLabelEL = document.querySelector('.coin-label');
 const supportedCoins = document.querySelector('.supported-coins');
 const coins = supportedCoins.querySelectorAll('img');
 
+const rickRoll = 'https://www.youtube.com/watch?v=oHg5SJYRHA0';
+
 // Cryptocurrency objects
 const coinsInfo = {
     btc: {
-        name: 'btc',
-        fullName: 'Bitcoin',
-        symbol: '₿',
+        symbol: 'btc',
+        name: 'Bitcoin',
         divisor: 1e8,
         decimals: 5,
         website: 'https://bitcoin.org'
     },
     eth: {
-        name: 'eth',
-        fullName: 'Ethereum',
-        symbol: 'Ξ',
+        symbol: 'eth',
+        name: 'Ethereum',
         divisor: 1e18,
         decimals: 3,
         website: 'https://ethereum.org'
     },
     dash: {
-        name: 'dash',
-        fullName: 'Dash',
-        symbol: 'Dash',
+        symbol: 'dash',
+        name: 'Dash',
         divisor: 1e8,
         decimals: 3,
         website: 'https://www.dash.org'
     },
     zec: {
-        name: 'zec',
-        fullName: 'Zcash',
         symbol: 'zec',
+        name: 'Zcash',
         divisor: 1,
         decimals: 3,
         website: 'https://www.z.cash'
     },
     doge: {
-        name: 'doge',
-        fullName: 'Doge',
         symbol: 'doge',
+        name: 'Doge',
         divisor: 1,
         decimals: 3,
         website: 'https://dogecoin.com'
     },
     ltc: {
-        name: 'ltc',
-        fullName: 'Litecoin',
         symbol: 'ltc',
+        name: 'Litecoin',
         divisor: 1,
         decimals: 3,
         website: 'https://litecoin.com'
     },
     bch: {
-        name: 'bch',
-        fullName: 'Bitcoin Cash',
         symbol: 'bch',
+        name: 'Bitcoin Cash',
         divisor: 1e8,
         decimals: 3,
         website: 'https://www.bitcoincash.org'
     },
     nano: {
-        name: 'nano',
-        fullName: 'Nano',
         symbol: 'nano',
+        name: 'Nano',
         divisor: 1e30,
         decimals: 3,
         website: 'https://nano.org'
     },
     xrp: {
-        name: 'xrp',
-        fullName: 'Ripple',
         symbol: 'xrp',
+        name: 'Ripple',
         divisor: 1,
         decimals: 3,
         website: 'https://ripple.com'
@@ -105,9 +98,8 @@ appWrapper.addEventListener('submit', (e) => {
     e.preventDefault();
 
     // get address from input
-    let address = addressEl.value;
+    let address = addressEl.value.trim();
 
-    // re
     let coin = recognizeCoin(address);
     if (!coin) {
         showWarning('😕', 'No address found');
@@ -124,10 +116,12 @@ addressEl.addEventListener('input', (e) => {
         balanceEl.innerHTML = '🌚';
         coinNameEl.classList.remove('warning');
         coinNameEl.innerHTML = '';
+        balanceEl.href = rickRoll;
     } else {
         balanceEl.innerHTML = '🚀';
         coinNameEl.classList.remove('warning');
         coinNameEl.innerHTML = '';
+        balanceEl.href = rickRoll;
     }
 })
 
@@ -161,13 +155,13 @@ function recognizeCoin(address) {
 
 function fetchApi(coin, address) {
     let fetched;
-    switch (coin.name) {
+    switch (coin.symbol) {
         case 'zec':
             fetched = fetch(`https://api.zcha.in/v2/mainnet/accounts/${address}`);
             break;
         case 'doge':
         case 'ltc':
-            fetched = fetch(`https://sochain.com/api/v2/get_address_balance/${coin.name.toUpperCase()}/${address}`);
+            fetched = fetch(`https://sochain.com/api/v2/get_address_balance/${coin.symbol}/${address}`);
             break;
         case 'nano':
             fetched = fetch(`https://api.nanex.cc:443/?action=account_info&account=${address}`);
@@ -179,7 +173,7 @@ function fetchApi(coin, address) {
             fetched = fetch(`https://api.xrpscan.com/api/v1/account/${address}`);
             break;
         default:
-            fetched = fetch(`https://api.blockcypher.com/v1/${coin.name}/main/addrs/${address}/balance`);
+            fetched = fetch(`https://api.blockcypher.com/v1/${coin.symbol}/main/addrs/${address}/balance`);
     };
 
     fetched
@@ -229,16 +223,16 @@ function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, add
 }
 
 // Shows balance and coin name
-function showBalance({ name, fullName, website }, balance) {
+function showBalance({ symbol, name, website }, balance) {
     balanceEl.innerHTML = `
                 ${balance}
                 <span>
-                    <img src='./img/svg/color/${name}.svg'>
+                    <img src='./img/svg/color/${symbol}.svg'>
                 </span>
             `;
 
     coinNameEl.classList.remove('warning');
-    coinNameEl.innerHTML = fullName;
+    coinNameEl.innerHTML = name;
     coinNameEl.href = website;
 };
 
@@ -250,8 +244,8 @@ function showWarning(emoji, msg) {
 }
 
 // creates custom link to blockhain for each coin
-function createBlockchainLink({ name }, address) {
-    switch (name) {
+function createBlockchainLink({ symbol }, address) {
+    switch (symbol) {
         case 'eth':
             balanceEl.href = `https://etherscan.io/address/${address}`;
             break;
@@ -268,7 +262,7 @@ function createBlockchainLink({ name }, address) {
             balanceEl.href = `https://xrpscan.com/account/${address}`;
             break;
         default:
-            balanceEl.href = `https://live.blockcypher.com/${name}/address/${address}/`;
+            balanceEl.href = `https://live.blockcypher.com/${symbol}/address/${address}/`;
     }
 };
 
