@@ -243,8 +243,13 @@ function fetchBalance(coin, address) {
 
 function fetchStats(coin, balance) {
     let fiat = 'USD';
-    let url = `https://api.nomics.com/v1/currencies/ticker?key=${apiKey}&ids=${coin.symbol.toUpperCase()}&convert=${fiat}`;
-    fetch(url)
+    let proxy = 'https://cors-anywhere.herokuapp.com'
+    let url = `${proxy}/https://api.nomics.com/v1/currencies/ticker?key=${apiKey}&ids=${coin.symbol.toUpperCase()}&convert=${fiat}`;
+    fetch(url, {
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        }
+    })
         .then(response => {
             if (!response.ok) {
                 // throws error so catch catches it
