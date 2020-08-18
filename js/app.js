@@ -278,19 +278,19 @@ function calculatePrice(amount, price) {
 // returns formatted balance amount (diveded and with fixed decimals)
 function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, address) {
     let balanceAmount;
-    if (balance) {
+    if (balance >= 0) {
         balanceAmount = balance;
-    } else if (xrpBalance) {
+    } else if (xrpBalance >= 0) {
         // XRP API FORMAT
         balanceAmount = xrpBalance;
-    } else if (data.confirmed_balance) {
+    } else if (data.confirmed_balance >= 0) {
         // DOGE & LTC API FORMAT
         balanceAmount = data.confirmed_balance;
-    } else if (data[address].address.balance) {
+    } else if (data[address].address.balance >= 0) {
         // BCH API FORMAT
         balanceAmount = data[address].address.balance;
     }
-    return (balanceAmount / divisor).toFixed(decimals);
+    return (balanceAmount / divisor).toFixed(decimals) | 0;
 }
 
 // Shows balance and coin name
