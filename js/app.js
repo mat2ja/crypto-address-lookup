@@ -10,7 +10,9 @@ const coinLabelEL = document.querySelector('.coin-label');
 const supportedCoins = document.querySelector('.supported-coins');
 const coins = supportedCoins.querySelectorAll('img');
 
-const rickRoll = 'https://www.youtube.com/watch?v=oHg5SJYRHA0';
+const defaultLink = 'https://www.youtube.com/watch?v=_PXU0thDHCU';
+
+balanceEl.href = defaultLink;
 
 // Cryptocurrency objects
 const coinsInfo = {
@@ -116,12 +118,12 @@ addressEl.addEventListener('input', (e) => {
         balanceEl.innerHTML = '🌚';
         coinNameEl.classList.remove('warning');
         coinNameEl.innerHTML = '';
-        balanceEl.href = rickRoll;
+        balanceEl.href = defaultLink;
     } else {
         balanceEl.innerHTML = '🚀';
         coinNameEl.classList.remove('warning');
         coinNameEl.innerHTML = '';
-        balanceEl.href = rickRoll;
+        balanceEl.href = defaultLink;
     }
 })
 
@@ -241,7 +243,8 @@ function showWarning(emoji, msg) {
     balanceEl.innerHTML = `${emoji}`
     coinNameEl.classList.add('warning');
     coinNameEl.innerHTML = `${msg}`;
-}
+};
+
 
 // creates custom link to blockhain for each coin
 function createBlockchainLink({ symbol }, address) {
