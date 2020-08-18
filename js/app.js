@@ -135,9 +135,6 @@ appWrapper.addEventListener('submit', (e) => {
     //     console.log(b);
     // });
 
-
-
-
 })
 
 // listens for change on input, checks if it is empty to show some placeholder
@@ -243,8 +240,8 @@ function fetchBalance(coin, address) {
 
 function fetchStats(coin, balance) {
     let fiat = 'USD';
-    let proxy = 'https://cors-anywhere.herokuapp.com'
-    let url = `${proxy}/https://api.nomics.com/v1/currencies/ticker?key=${apiKey}&ids=${coin.symbol.toUpperCase()}&convert=${fiat}`;
+    let proxy = 'https://cors-anywhere.herokuapp.com/'
+    let url = `${proxy}https://api.nomics.com/v1/currencies/ticker?key=${apiKey}&ids=${coin.symbol.toUpperCase()}&convert=${fiat}`;
     fetch(url, {
         headers: {
             'Access-Control-Allow-Origin': '*'
@@ -289,8 +286,9 @@ function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, add
     } else if (data[address].address.balance >= 0) {
         // BCH API FORMAT
         balanceAmount = data[address].address.balance;
-    }
-    return (balanceAmount / divisor).toFixed(decimals) | 0;
+    } 
+    // TODO fix zero addresses
+    return (balanceAmount / divisor).toFixed(decimals);
 }
 
 // Shows balance and coin name
