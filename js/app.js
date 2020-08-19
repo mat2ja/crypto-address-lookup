@@ -4,6 +4,9 @@ const cardEl = document.querySelector('.card');
 const addressEl = document.querySelector('.address');
 const balanceEl = document.querySelector('.balance');
 const priceEl = document.querySelector('.coin-price');
+const priceChangeElements = document.querySelectorAll('.coin-change');
+const priceChangeUpEl = document.querySelector('.coin-change--up');
+const priceChangeDownEl = document.querySelector('.coin-change--down');
 const searchBtn = document.querySelector('.search');
 const coinNameEl = document.querySelector('.coin-name');
 
@@ -51,14 +54,14 @@ const coinsInfo = {
     doge: {
         symbol: 'doge',
         name: 'Dogecoin',
-        divisor: 1,
+        divisor: 1e8,
         decimals: 3,
         website: 'https://dogecoin.com'
     },
     ltc: {
         symbol: 'ltc',
         name: 'Litecoin',
-        divisor: 1,
+        divisor: 1e8,
         decimals: 3,
         website: 'https://litecoin.com'
     },
@@ -111,30 +114,9 @@ appWrapper.addEventListener('submit', (e) => {
         showWarning('😕', 'No address found');
         return
     };
+    console.log(address);
 
-    // fetchBalance(coin, address);
-
-
-    function getBalance() {
-        return fetchBalance(coin, address);
-    }
-
-    getBalance().then(balance => {
-        console.log(balance);
-    });
-
-
-    // async function getBalance() {
-    //     const response = await fetch(`https://api.blockcypher.com/v1/${coin.symbol}/main/addrs/${address}/balance`);
-    //     const data = await response.json();
-
-    //     return formatBalance(data, coin, address);
-
-    // };
-    // getBalance().then(b => {
-    //     console.log(b);
-    // });
-
+    fetchBalance(coin, address);
 })
 
 // listens for change on input, checks if it is empty to show some placeholder
@@ -150,6 +132,7 @@ addressEl.addEventListener('input', (e) => {
     coinNameEl.innerHTML = '';
     balanceEl.href = defaultLink;
     priceEl.innerText = '';
+    priceChangeElements.forEach(elem => elem.style.display = 'none');
 
 })
 
@@ -187,10 +170,6 @@ function fetchBalance(coin, address) {
         case 'zec':
             url = `https://api.zcha.in/v2/mainnet/accounts/${address}`;
             break;
-        case 'doge':
-        case 'ltc':
-            url = `https://sochain.com/api/v2/get_address_balance/${coin.symbol}/${address}`;
-            break;
         case 'nano':
             url = `https://api.nanex.cc:443/?action=account_info&account=${address}`;
             break;
@@ -203,6 +182,7 @@ function fetchBalance(coin, address) {
         default:
             url = `https://api.blockcypher.com/v1/${coin.symbol}/main/addrs/${address}/balance`;
     };
+    console.log(url);
 
 
     return fetch(url)
@@ -215,7 +195,7 @@ function fetchBalance(coin, address) {
         })
         .then(data => {
             console.log(data);
-
+            console.log(data.status);
             let balance = formatBalance(data, coin, address);
 
             // cos nano api returns shitty string instead of throwing error if wrong address
@@ -229,7 +209,7 @@ function fetchBalance(coin, address) {
 
             fetchStats(coin, balance);
 
-            return balance;
+            // return balance;
 
         })
         .catch(err => {
@@ -242,6 +222,7 @@ function fetchStats(coin, balance) {
     let fiat = 'USD';
     let proxy = 'https://cors-anywhere.herokuapp.com/'
     let url = `${proxy}https://api.nomics.com/v1/currencies/ticker?key=${apiKey}&ids=${coin.symbol.toUpperCase()}&convert=${fiat}`;
+
     fetch(url, {
         headers: {
             'Access-Control-Allow-Origin': '*'
@@ -256,11 +237,17 @@ function fetchStats(coin, balance) {
         })
         .then(data => {
             let exchangeRate = data[0].price;
-            console.log('price: ', exchangeRate);
+            let priceChange = data[0]['1d'].price_change;
+
+            console.log('change: ', priceChange);
+            console.log('Exchange Rate: ', exchangeRate);
+
             let price = calculatePrice(balance, exchangeRate);
-            console.log('price: ', price);
+
+            console.log('Price: ', price);
 
             showPrice(price);
+            showChange(priceChange);
         })
         .catch(err => {
             console.log(err);
@@ -280,11 +267,6 @@ function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, add
     } else if (xrpBalance) {
         // XRP API FORMAT
         balanceAmount = xrpBalance;
-    } else if (data.confirmed_balance) {
-        // DOGE & LTC API FORMAT
-        // TODO stopped working
-        console.log(data.confirmed_balance);
-        balanceAmount = data.confirmed_balance;
     } else if (data[address].address.balance) {
         // BCH API FORMAT
         balanceAmount = data[address].address.balance;
@@ -308,7 +290,28 @@ function showBalance({ symbol, name, website }, balance) {
 };
 
 function showPrice(price) {
-    priceEl.innerText = `$${price.toFixed(2)}`
+    priceEl.innerText = `$${commaSeparateNumber(price.toFixed(2))}`
+};
+
+function commaSeparateNumber(val) {
+    while (/(\d+)(\d{3})/.test(val.toString())) {
+        val = val.toString().replace(/(\d+)(\d{3})/, '$1' + ',' + '$2');
+    }
+    return val;
+}
+
+function showChange(priceChange) {
+    if (priceChange > 0) {
+        console.log('hey');
+        priceChangeUpEl.style.display = 'block';
+        priceChangeDownEl.style.display = 'none';
+        priceEl.classList.add('success');
+
+    } else {
+        priceChangeUpEl.style.display = 'none';
+        priceChangeDownEl.style.display = 'block';
+        priceEl.classList.add('warning');
+    }
 }
 
 // shows warning message and emoji
@@ -318,6 +321,7 @@ function showWarning(emoji, msg) {
     coinNameEl.classList.add('warning');
     coinNameEl.innerHTML = `${msg}`;
     coinNameEl.href = defaultLink2;
+    priceChangeElements.forEach(elem => elem.style.display = 'none');
 };
 
 

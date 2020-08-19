@@ -9,6 +9,7 @@
 
         <link rel="stylesheet" href="css/style.css">
         <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+        <script src="https://unpkg.com/boxicons@latest/dist/boxicons.js"></script>
     </head>
 
     <body>
@@ -30,9 +31,12 @@
                 <input type='text' class="address" placeholder="Enter your address"></input>
                 <div class="stats">
                     <a class="balance" target='_blank'>🌚</a>
-                    <p class="coin-price"></p>
-                    <a class="coin-name" target='_blank'>
-                    </a>
+                    <div class="coin-stats">
+                        <p class="coin-price"></p>
+                        <p class="coin-change coin-change--up"><box-icon name='trending-up' size='lg'></box-icon></p>
+                        <p class="coin-change coin-change--down"><box-icon name='trending-down' size='lg'></box-icon></p>
+                    </div>
+                    <a class="coin-name" target='_blank'></a>
                 </div>
             </div>
             <button class="btn search">Search</button>

@@ -129,12 +129,35 @@ a {
 	justify-content: center;
 }
 
-.coin-price {
-	margin-top: .2em;
-	text-align: center;
-	font-size: 1.6em;
-	color: hsla(36, 100%, 50%, 0.6);
+.coin-stats {
+	margin-top: 1em;
+	display: flex;
+	align-items: center;
 	height: 1em;
+
+	.coin-price {
+		text-align: center;
+		font-size: 1.6em;
+		display: flex;
+		align-items: center;
+	}
+
+	.coin-change {
+		text-align: center;
+		margin-left: 1em;
+
+		&--up {
+			fill: rgb(19, 199, 79);
+			position: relative;
+			top: 2px;
+			display: none;
+		}
+
+		&--down {
+			fill: #ff3d00;
+			display: none;
+		}
+	}
 }
 
 .btn {
@@ -168,7 +191,13 @@ a {
 	font-weight: bold;
 }
 
-.coin-name.warning {
+.success {
+	fill: rgb(19, 199, 79);
+	color: rgb(19, 199, 79);
+}
+
+.warning {
+	fill: #ff3d00;
 	color: #ff3d00;
 }
 
