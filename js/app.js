@@ -347,7 +347,7 @@ function showStats(stats, value) {
 
     priceEl.innerText = `$${value}`;
     coinStatsEl.innerHTML = statsMsg;
-    coinStatsEl.href = '';
+    coinStatsEl.href = 'https://coinmarketcap.com/';
 };
 
 function commaSeparateNumber(val) {
