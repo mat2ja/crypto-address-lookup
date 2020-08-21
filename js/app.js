@@ -305,11 +305,13 @@ function showChange(priceChange) {
         console.log('hey');
         priceChangeUpEl.style.display = 'block';
         priceChangeDownEl.style.display = 'none';
+        priceEl.classList.remove('warning');
         priceEl.classList.add('success');
 
     } else {
         priceChangeUpEl.style.display = 'none';
         priceChangeDownEl.style.display = 'block';
+        priceEl.classList.remove('success');
         priceEl.classList.add('warning');
     }
 }
