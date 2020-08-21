@@ -338,12 +338,10 @@ function showStats(stats) {
     rank = commaSeparateNumber(rank);
 
     let statsMsg = `
-        Rank: ${rank} <span>·</span> MC: ${market_cap} <span>·</span> Price: $${price} <span>·</span> High: $${high}
+        Rank: ${rank}<span>·</span>MC: ${market_cap}<span>·</span>Price: $${price}<span>·</span>High: $${high}
     `;
 
     coinStatsEl.innerHTML = statsMsg;
-
-
 };
 
 function commaSeparateNumber(val) {
