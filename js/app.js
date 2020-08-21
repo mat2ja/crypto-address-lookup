@@ -114,7 +114,6 @@ appWrapper.addEventListener('submit', (e) => {
         showWarning('😕', 'No address found');
         return
     };
-    console.log(address);
 
     fetchBalance(coin, address);
 })
@@ -182,10 +181,9 @@ function fetchBalance(coin, address) {
         default:
             url = `https://api.blockcypher.com/v1/${coin.symbol}/main/addrs/${address}/balance`;
     };
-    console.log(url);
+    console.log('Balance URL: ', url);
 
-
-    return fetch(url)
+    fetch(url)
         .then(response => {
             if (!response.ok) {
                 // throws error so catch catches it
@@ -194,8 +192,7 @@ function fetchBalance(coin, address) {
             return response.json();
         })
         .then(data => {
-            console.log(data);
-            console.log(data.status);
+            console.log('Balance api data: ', data);
             let balance = formatBalance(data, coin, address);
 
             // cos nano api returns shitty string instead of throwing error if wrong address
@@ -236,11 +233,12 @@ function fetchStats(coin, balance) {
             return response.json();
         })
         .then(data => {
+            console.log('Stats api data: ', data);
             let exchangeRate = data[0].price;
             let priceChange = data[0]['1d'].price_change;
 
-            console.log('change: ', priceChange);
-            console.log('Exchange Rate: ', exchangeRate);
+            console.log('Change: ', priceChange);
+            console.log('Exchange rate: ', exchangeRate);
 
             let price = calculatePrice(balance, exchangeRate);
 
@@ -302,7 +300,6 @@ function commaSeparateNumber(val) {
 
 function showChange(priceChange) {
     if (priceChange > 0) {
-        console.log('hey');
         priceChangeUpEl.style.display = 'block';
         priceChangeDownEl.style.display = 'none';
         priceEl.classList.remove('warning');

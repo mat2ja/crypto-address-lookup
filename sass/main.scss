@@ -25,11 +25,11 @@
 html {
 	box-sizing: border-box;
 	font-size: 62.5%;
-	font-family: 'IBM Plex Mono', monospace;
+	font-family: 'Anonymous Pro', monospace;
 }
 
 body {
-	font-size: 1.6rem;
+	font-size: 1.8rem;
 	background: var(--bg);
 	color: whitesmoke;
 	min-height: 100vh;
@@ -76,9 +76,10 @@ a {
 
 .address {
 	font: inherit;
-	font-size: 2.25rem;
+	font-size: 2.4rem;
 	background: transparent;
-	padding: 0.5em;
+	padding: .3em .5em;
+	line-height: 1.4;
 	border: none;
 	background: var(--bg-input);
 	color: var(--orange-1);
