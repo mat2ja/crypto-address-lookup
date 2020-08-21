@@ -70,7 +70,7 @@ const coinsInfo = {
     },
     bch: {
         symbol: 'bch',
-        name: 'Bitcoin Cash',
+        name: 'BTC Cash',
         divisor: 1e8,
         decimals: 3,
         website: 'https://www.bitcoincash.org'
@@ -274,9 +274,8 @@ function fetchStats(coin, balance) {
 
             console.log('Balance value: ', balanceValue);
 
-            showPrice(balanceValue);
             showChange(priceChange);
-            showStats(stats)
+            showStats(stats, balanceValue)
         })
         .catch(err => {
             console.log(err);
@@ -307,7 +306,7 @@ function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, add
 // Shows balance and coin name
 function showBalance({ symbol, name }, balance) {
     balanceEl.innerHTML = `
-                ${balance}
+                ${commaSeparateNumber(balance)}
                 <span>
                     <img src='./img/svg/color/${symbol}.svg'>
                 </span>
@@ -318,12 +317,7 @@ function showBalance({ symbol, name }, balance) {
     coinLabelEl.innerText = name;
 };
 
-function showPrice(price) {
-    console.log('typeof price', typeof price);
-    priceEl.innerText = `$${commaSeparateNumber(price.toFixed(2))}`
-};
-
-function showStats(stats) {
+function showStats(stats, value) {
     let formattedStats = { ...stats };
     let {
         rank,
@@ -332,6 +326,7 @@ function showStats(stats) {
         high,
     } = formattedStats;
 
+    value = commaSeparateNumber((+value).toFixed(2));
     price = commaSeparateNumber((+price).toFixed(2));
     high = commaSeparateNumber((+high).toFixed(2));
     market_cap = commaSeparateNumber(market_cap);
@@ -341,7 +336,9 @@ function showStats(stats) {
         Rank: ${rank}<span>·</span>MC: ${market_cap}<span>·</span>Price: $${price}<span>·</span>High: $${high}
     `;
 
+    priceEl.innerText = value;
     coinStatsEl.innerHTML = statsMsg;
+    coinStatsEl.href = '';
 };
 
 function commaSeparateNumber(val) {
