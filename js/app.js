@@ -325,21 +325,20 @@ function showPrice(price) {
 
 function showStats(stats) {
     let formattedStats = { ...stats };
-    for (let k in formattedStats) {
-        formattedStats[k] = commaSeparateNumber((+formattedStats[k]));
-        console.log(formattedStats[k]);
-    };
     let {
         rank,
         market_cap,
         price,
         high,
     } = formattedStats;
-    price = parseFloat(price).toFixed(2);
-    high = parseFloat(high).toFixed(2);
+
+    price = commaSeparateNumber((+price).toFixed(2));
+    high = commaSeparateNumber((+high).toFixed(2));
+    market_cap = commaSeparateNumber(market_cap);
+    rank = commaSeparateNumber(rank);
 
     let statsMsg = `
-        Rank: ${rank} <span>·</span> Market Cap: $${market_cap} <span>·</span> Price: ${price} <span>·</span> High: ${high}
+        Rank: ${rank} <span>·</span> MC: ${market_cap} <span>·</span> Price: $${price} <span>·</span> High: $${high}
     `;
 
     coinStatsEl.innerHTML = statsMsg;

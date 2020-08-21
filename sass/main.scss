@@ -185,13 +185,14 @@ a {
 }
 
 .coin-stats {
-	padding: 0.5em 1em;
+	padding: 0.5em;
 	position: absolute;
 	bottom: 0;
+	left: 0;
 	right: 0;
 	color: var(--bg-input);
 	font-weight: bold;
-	font-size: .9em;
+	font-size: .85em;
 	text-align: center;
 
 	span {
