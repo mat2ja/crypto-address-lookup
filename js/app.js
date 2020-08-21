@@ -136,16 +136,18 @@ function cleanupData() {
     } else {
         balanceEl.innerHTML = '🚀';
     }
+
     coinStatsEl.classList.remove('warning');
     coinStatsEl.innerHTML = '';
+
     balanceEl.href = defaultLink;
+    balanceEl.classList.add('middle');
+
     priceEl.innerText = '';
-    priceChangeElements.forEach(elem => elem.style.display = 'none');
     priceEl.classList.remove('warning');
     priceEl.classList.remove('success');
 
-
-
+    priceChangeElements.forEach(elem => elem.style.display = 'none');
 }
 
 // recognizes coin address and returns key of recognized coin object
@@ -310,7 +312,7 @@ function showBalance({ symbol, name }, balance) {
     } else if (!(balance > 0)) {
         balance = 0;
     }
-    
+
     balanceEl.innerHTML = `
                 ${balance}
                 <span>
@@ -318,6 +320,7 @@ function showBalance({ symbol, name }, balance) {
                 </span>
             `;
 
+    balanceEl.classList.remove('middle');
     coinStatsEl.classList.remove('warning');
     coinLabelEl.classList.remove('hide');
     coinLabelEl.innerText = name;
@@ -372,6 +375,7 @@ function showChange(priceChange) {
 // shows warning message and emoji
 function showWarning(emoji, msg) {
     balanceEl.innerHTML = `${emoji}`
+    balanceEl.classList.remove('middle');
     priceEl.innerText = '';
     coinStatsEl.classList.add('warning');
     coinStatsEl.innerHTML = `${msg}`;
