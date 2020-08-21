@@ -15,31 +15,50 @@
         <form class="app">
             <div class="supported-coins">
                 <!-- TODO somehow build so that pictures work online -->
-                <img src="img/svg/color/btc.svg" alt="BTC" data-name='Bitcoin'>
-                <img src="img/svg/color/eth.svg" alt="ETH" data-name='Ethereum'>
-                <img src="img/svg/color/xrp.svg" alt="XRP" data-name='Ripple'>
-                <img src="img/svg/color/ltc.svg" alt="LTC" data-name='Litecoin'>
-                <img src="img/svg/color/bch.svg" alt="BCH" data-name='BTC Cash'>
-                <img src="img/svg/color/dash.svg" alt="DASH" data-name='Dash'>
-                <img src="img/svg/color/zec.svg" alt="ZEC" data-name='Zcash'>
-                <img src="img/svg/color/nano.svg" alt="NANO" data-name='Nano'>
-                <img src="img/svg/color/doge.svg" alt="DOGE" data-name='Dogecoin'>
+                <a target='_blank' href="https://bitcoin.org">
+                    <img src="img/svg/color/btc.svg" alt="BTC" data-name='Bitcoin'>
+                </a>
+                <a target='_blank' href="https://ethereum.org">
+                    <img src="img/svg/color/eth.svg" alt="ETH" data-name='Ethereum'>
+                </a>
+                <a target='_blank' href="https://www.ripple.com">
+                    <img src="img/svg/color/xrp.svg" alt="XRP" data-name='Ripple'>
+                </a>
+                <a target='_blank' href="https://litecoin.com">
+                    <img src="img/svg/color/ltc.svg" alt="LTC" data-name='Litecoin'>
+                </a>
+                <a target='_blank' href="https://www.bitcoincash.org">
+                    <img src="img/svg/color/bch.svg" alt="BCH" data-name='BTC Cash'>
+                </a>
+                <a target='_blank' href="https://www.dash.org">
+                    <img src="img/svg/color/dash.svg" alt="DASH" data-name='Dash'>
+                </a>
+                <a target='_blank' href="https://www.z.cash">
+                    <img src="img/svg/color/zec.svg" alt="ZEC" data-name='Zcash'>
+                </a>
+                <a target='_blank' href="https://nano.org">
+                    <img src="img/svg/color/nano.svg" alt="NANO" data-name='Nano'>
+                </a>
+                <a target='_blank' href="https://dogecoin.com">
+                    <img src="img/svg/color/doge.svg" alt="DOGE" data-name='Dogecoin'>
+                </a>
             </div>
             <div class="card">
                 <span class="coin-label hide"></span>
                 <input type='text' class="address" placeholder="Enter your address"></input>
                 <div class="stats">
                     <a class="balance" target='_blank'>🌚</a>
-                    <div class="coin-stats">
+                    <div class="coin-price-data">
                         <p class="coin-price"></p>
                         <p class="coin-change coin-change--up">
+
                             <box-icon name='trending-up' size='lg'></box-icon>
                         </p>
                         <p class="coin-change coin-change--down">
                             <box-icon name='trending-down' size='lg'></box-icon>
                         </p>
                     </div>
-                    <a class="coin-name" target='_blank'></a>
+                    <a class="coin-stats" target='_blank'></a>
                 </div>
             </div>
             <button class="btn search">Search</button>

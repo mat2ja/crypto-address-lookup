@@ -3,12 +3,15 @@ const appWrapper = document.querySelector('.app');
 const cardEl = document.querySelector('.card');
 const addressEl = document.querySelector('.address');
 const balanceEl = document.querySelector('.balance');
+
 const priceEl = document.querySelector('.coin-price');
 const priceChangeElements = document.querySelectorAll('.coin-change');
 const priceChangeUpEl = document.querySelector('.coin-change--up');
 const priceChangeDownEl = document.querySelector('.coin-change--down');
+
 const searchBtn = document.querySelector('.search');
-const coinNameEl = document.querySelector('.coin-name');
+
+const coinStatsEl = document.querySelector('.coin-stats');
 
 const coinLabelEl = document.querySelector('.coin-label');
 const supportedCoins = document.querySelector('.supported-coins');
@@ -91,14 +94,18 @@ const coinsInfo = {
 // Add coin name label on hover
 for (let coin of coins) {
     coin.addEventListener('mouseover', () => {
-        document.querySelector('.coin-label').classList.remove('hide');
-        document.querySelector('.coin-label').innerText = coin.dataset.name;
+        if (!addressEl.value) {
+            coinLabelEl.classList.remove('hide');
+            coinLabelEl.innerText = coin.dataset.name;
+        }
     })
 }
 
 // Remove coin name label on hover-end
 supportedCoins.addEventListener('mouseleave', () => {
-    document.querySelector('.coin-label').classList.add('hide');
+    if (!addressEl.value) {
+        coinLabelEl.classList.add('hide');
+    }
 });
 
 // what to do on address submit
@@ -119,21 +126,27 @@ appWrapper.addEventListener('submit', (e) => {
 })
 
 // listens for change on input, checks if it is empty to show some placeholder
-addressEl.addEventListener('input', (e) => {
+addressEl.addEventListener('input', cleanupData);
+
+function cleanupData() {
     // if value is empty
     if (!addressEl.value) {
         balanceEl.innerHTML = '🌚';
-        coinNameEl.classList.remove('warning');
+        coinLabelEl.classList.add('hide');
     } else {
         balanceEl.innerHTML = '🚀';
-        coinNameEl.classList.remove('warning');
     }
-    coinNameEl.innerHTML = '';
+    coinStatsEl.classList.remove('warning');
+    coinStatsEl.innerHTML = '';
     balanceEl.href = defaultLink;
     priceEl.innerText = '';
     priceChangeElements.forEach(elem => elem.style.display = 'none');
+    priceEl.classList.remove('warning');
+    priceEl.classList.remove('success');
 
-})
+
+
+}
 
 // recognizes coin address and returns key of recognized coin object
 function recognizeCoin(address) {
@@ -232,20 +245,38 @@ function fetchStats(coin, balance) {
             };
             return response.json();
         })
-        .then(data => {
+        .then(([data]) => {
             console.log('Stats api data: ', data);
-            let exchangeRate = data[0].price;
-            let priceChange = data[0]['1d'].price_change;
+            let priceChange = data['1d'].price_change;
+
+            let {
+                price,
+                rank,
+                market_cap,
+                circulating_supply,
+                max_supply,
+                high,
+            } = data;
+
+            let stats = {
+                price,
+                rank,
+                market_cap,
+                circulating_supply,
+                max_supply,
+                high,
+            }
 
             console.log('Change: ', priceChange);
-            console.log('Exchange rate: ', exchangeRate);
+            console.log('Exchange rate: ', price);
 
-            let price = calculatePrice(balance, exchangeRate);
+            let balanceValue = calculatePrice(balance, price);
 
-            console.log('Price: ', price);
+            console.log('Balance value: ', balanceValue);
 
-            showPrice(price);
+            showPrice(balanceValue);
             showChange(priceChange);
+            showStats(stats)
         })
         .catch(err => {
             console.log(err);
@@ -274,7 +305,7 @@ function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, add
 }
 
 // Shows balance and coin name
-function showBalance({ symbol, name, website }, balance) {
+function showBalance({ symbol, name }, balance) {
     balanceEl.innerHTML = `
                 ${balance}
                 <span>
@@ -282,13 +313,38 @@ function showBalance({ symbol, name, website }, balance) {
                 </span>
             `;
 
-    coinNameEl.classList.remove('warning');
-    coinNameEl.innerHTML = name;
-    coinNameEl.href = website;
+    coinStatsEl.classList.remove('warning');
+    coinLabelEl.classList.remove('hide');
+    coinLabelEl.innerText = name;
 };
 
 function showPrice(price) {
+    console.log('typeof price', typeof price);
     priceEl.innerText = `$${commaSeparateNumber(price.toFixed(2))}`
+};
+
+function showStats(stats) {
+    let formattedStats = { ...stats };
+    for (let k in formattedStats) {
+        formattedStats[k] = commaSeparateNumber((+formattedStats[k]));
+        console.log(formattedStats[k]);
+    };
+    let {
+        rank,
+        market_cap,
+        price,
+        high,
+    } = formattedStats;
+    price = parseFloat(price).toFixed(2);
+    high = parseFloat(high).toFixed(2);
+
+    let statsMsg = `
+        Rank: ${rank} <span>·</span> Market Cap: $${market_cap} <span>·</span> Price: ${price} <span>·</span> High: ${high}
+    `;
+
+    coinStatsEl.innerHTML = statsMsg;
+
+
 };
 
 function commaSeparateNumber(val) {
@@ -317,9 +373,9 @@ function showChange(priceChange) {
 function showWarning(emoji, msg) {
     balanceEl.innerHTML = `${emoji}`
     priceEl.innerText = '';
-    coinNameEl.classList.add('warning');
-    coinNameEl.innerHTML = `${msg}`;
-    coinNameEl.href = defaultLink2;
+    coinStatsEl.classList.add('warning');
+    coinStatsEl.innerHTML = `${msg}`;
+    coinStatsEl.href = defaultLink2;
     priceChangeElements.forEach(elem => elem.style.display = 'none');
 };
 
