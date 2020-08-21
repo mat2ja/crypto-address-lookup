@@ -336,7 +336,7 @@ function showStats(stats, value) {
         Rank: ${rank}<span>·</span>MC: ${market_cap}<span>·</span>Price: $${price}<span>·</span>High: $${high}
     `;
 
-    priceEl.innerText = value;
+    priceEl.innerText = `$${value}`;
     coinStatsEl.innerHTML = statsMsg;
     coinStatsEl.href = '';
 };
