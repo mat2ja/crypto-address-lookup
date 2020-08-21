@@ -305,11 +305,14 @@ function formatBalance({ balance, xrpBalance, data }, { divisor, decimals }, add
 
 // Shows balance and coin name
 function showBalance({ symbol, name }, balance) {
-    if (!(balance > 0)) {
+    if (balance >= 1) {
+        balance = commaSeparateNumber(balance);
+    } else if (!(balance > 0)) {
         balance = 0;
     }
+    
     balanceEl.innerHTML = `
-                ${commaSeparateNumber(balance)}
+                ${balance}
                 <span>
                     <img src='./img/svg/color/${symbol}.svg'>
                 </span>
