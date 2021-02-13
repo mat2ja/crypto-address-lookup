@@ -11,6 +11,5 @@ Fetches your balance from the blockhain, converts the value to dollars, and tell
 Here are some addresses to try out if you don't know crypto:
 
 -   bc1qjjywl32fa5eqdu5rzgcrvrxhnxmxpdam4gwksg
--   0x6d91f46966f703c61090e829fbe0870d3551caa9
 -   nano_1dptcs1wo89e5q8udktm36gj4ue34t7cqfxdtf5mxao71bufnogpus1kdtes
 
