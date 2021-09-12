@@ -238,48 +238,51 @@ function fetchStats(coin, balance) {
 	let proxy = 'https://cors-anywhere.herokuapp.com/';
 	let url = `${proxy}https://api.nomics.com/v1/currencies/ticker?key=${apiKey}&ids=${coin.symbol.toUpperCase()}&convert=${fiat}`;
 
-	fetch(url, {
-		headers: {
-			'Access-Control-Allow-Origin': '*',
-		},
-	})
-		.then((response) => {
-			if (!response.ok) {
-				// throws error so catch catches it
-				throw new Error(`Status Code Error: ${response.status}`);
-			}
-			return response.json();
-		})
-		.then(([data]) => {
-			console.log('Stats api data: ', data);
-			let priceChange = data['1d'].price_change;
+	// fetch(url, {
+	// 	headers: {
+	// 		'Access-Control-Allow-Origin': '*',
+	// 		'Content-Type': 'application/json',
+	// 	},
+	// })
+	// 	.then((response) => {
+	// 		if (!response.ok) {
+	// 			// throws error so catch catches it
+	// 			console.log(response);
+	// 			throw new Error(`Status Code Error: ${response.status}`);
+	// 		}
+	// 		return response.json();
+	// 	})
+	// 	.then(([data]) => {
+	// 		console.log('Stats api data: ', data);
+	// 		let priceChange = data['1d'].price_change;
 
-			let { price, rank, market_cap, circulating_supply, max_supply, high } =
-				data;
+	// 		let { price, rank, market_cap, circulating_supply, max_supply, high } =
+	// 			data;
 
-			let stats = {
-				price,
-				rank,
-				market_cap,
-				circulating_supply,
-				max_supply,
-				high,
-			};
+	// 		let stats = {
+	// 			price,
+	// 			rank,
+	// 			market_cap,
+	// 			circulating_supply,
+	// 			max_supply,
+	// 			high,
+	// 		};
+	// 		console.log(stats);
 
-			console.log('Change: ', priceChange);
-			console.log('Exchange rate: ', price);
+	// 		console.log('Change: ', priceChange);
+	// 		console.log('Exchange rate: ', price);
 
-			let balanceValue = calculatePrice(balance, price);
+	// 		let balanceValue = calculatePrice(balance, price);
 
-			console.log('Balance value: ', balanceValue);
+	// 		console.log('Balance value: ', balanceValue);
 
-			showChange(priceChange);
-			showStats(stats, balanceValue);
-		})
-		.catch((err) => {
-			console.log(err);
-			showWarning('😳', 'Something went wrong');
-		});
+	// 		showChange(priceChange);
+	// 		showStats(stats, balanceValue);
+	// 	})
+	// 	.catch((err) => {
+	// 		console.log(err);
+	// 		showWarning('😳', 'Something went wrong');
+	// 	});
 }
 
 function calculatePrice(amount, price) {
