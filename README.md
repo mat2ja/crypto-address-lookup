@@ -1,6 +1,6 @@
 ### App to check your crypto balance in real time
 
-Made in its entirety by me
+Made in its entirety by me (before I knew what I was doing)
 
 Fetches your balance from the blockhain, converts the value to dollars, and tells you the latest info about that specific coin. I like it.
 
